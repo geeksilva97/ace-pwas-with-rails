@@ -1,6 +1,5 @@
-
-const VERSION = 'v1'; // Version will be the key
-
+const VERSION = `${Date.now()}`; // Version will be the key
+// Cache first strategy
 async function cacheFirst(request) {
   const cache = await caches.open(VERSION);
   const cachedResponse = await cache.match(request);
@@ -22,6 +21,17 @@ async function cacheFirst(request) {
     });
   }
 }
+
+self.addEventListener('activate', function(event) {
+  console.log('service worker is being activated...', { event });
+
+  self.postMessage('Hello from service worker');
+});
+
+self.addEventListener('install', function(event) {
+  // quando esse evento é chamado, o service worker está instalado
+  console.log('service worker is being installed...', { event, blah: event.srcElement.registration });
+})
 
 self.addEventListener('fetch', function(event) {
   const url = new URL(event.request.url);
@@ -47,6 +57,15 @@ self.addEventListener('activate', function(event) {
       );
     })
   );
+
+});
+
+self.addEventListener('message', function(event) {
+  console.log('service worker received a message', { event });
+  if (event.data === 'SKIP_WAITING') {
+    console.log({ self })
+    self.skipWaiting();
+  }
 });
 
 // Add a service worker for processing Web Push notifications:

@@ -2,18 +2,38 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-// navigator.setAppBadge(12).then(() => {
-//   console.log('Badge set!');
-// }).catch((error) => {
-//   console.error(error);
-// });
-
 function registerServiceWorker() {
-  console.log('Registering service worker...');
-
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js').then((registration) => {
       console.log('Service worker registered:', registration);
+
+      // TODO: enviar somente se o state for installed
+      if (registration.waiting?.state === 'installed') {
+        if (confirm('New version available. Want to upgrage?')) {
+          registration.waiting.postMessage('SKIP_WAITING');
+          return;
+        }
+      }
+      console.log('just checking', {
+        waiting: registration.waiting,
+        installing: registration.installing,
+      });
+
+      registration.addEventListener('updatefound', () => {
+        console.log('updatefound - some service worker is being installed', {
+          waiting: registration.waiting,
+          installing: registration.installing,
+        });
+
+        const newWorker = registration.installing;
+        newWorker.addEventListener('statechange', () => {
+          console.log({ state: newWorker.state })
+          if (newWorker.state !== 'installed') return;
+          if (confirm('[statechanged] New version available. Want to upgrage?')) {
+            registration.waiting.postMessage('SKIP_WAITING');
+          }
+        });
+      });
     }).catch((error) => {
       console.error('Service worker registration failed:', error);
     });
@@ -22,4 +42,8 @@ function registerServiceWorker() {
 
 if ('serviceWorker' in navigator) {
   registerServiceWorker();
+
+  window.addEventListener('message', (event) => {
+    console.log({ event })
+  })
 }
