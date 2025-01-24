@@ -1,3 +1,4 @@
+// get version from environment somehow
 const VERSION = `${Date.now()}`; // Version will be the key
 // Cache first strategy
 async function cacheFirst(request) {
@@ -29,7 +30,7 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('install', function(event) {
-  // quando esse evento é chamado, o service worker está instalado
+  // quando esse evento é chamado, o service worker está instalado, podemis fazer skipWaiting
   console.log('service worker is being installed...', { event, blah: event.srcElement.registration });
 })
 
@@ -57,7 +58,6 @@ self.addEventListener('activate', function(event) {
       );
     })
   );
-
 });
 
 self.addEventListener('message', function(event) {

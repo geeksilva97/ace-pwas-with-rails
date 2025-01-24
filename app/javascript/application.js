@@ -10,7 +10,7 @@ function registerServiceWorker() {
       // TODO: enviar somente se o state for installed
       if (registration.waiting?.state === 'installed') {
         if (confirm('New version available. Want to upgrage?')) {
-          registration.waiting.postMessage('SKIP_WAITING');
+          // registration.waiting.postMessage('SKIP_WAITING');
           return;
         }
       }
@@ -30,7 +30,7 @@ function registerServiceWorker() {
           console.log({ state: newWorker.state })
           if (newWorker.state !== 'installed') return;
           if (confirm('[statechanged] New version available. Want to upgrage?')) {
-            registration.waiting.postMessage('SKIP_WAITING');
+            // registration.waiting.postMessage('SKIP_WAITING');
           }
         });
       });
@@ -43,7 +43,7 @@ function registerServiceWorker() {
 if ('serviceWorker' in navigator) {
   registerServiceWorker();
 
-  window.addEventListener('message', (event) => {
-    console.log({ event })
-  })
+  // window.addEventListener('message', (event) => {
+  //   console.log({ event })
+  // })
 }
