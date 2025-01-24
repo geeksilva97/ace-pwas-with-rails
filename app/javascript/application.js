@@ -9,10 +9,10 @@ function registerServiceWorker() {
 
       // TODO: enviar somente se o state for installed
       if (registration.waiting?.state === 'installed') {
-        if (confirm('New version available. Want to upgrage?')) {
-          // registration.waiting.postMessage('SKIP_WAITING');
-          return;
-        }
+        // if (confirm('New version available. Want to upgrage?')) {
+        // registration.waiting.postMessage('SKIP_WAITING');
+        // return;
+        // }
       }
       console.log('just checking', {
         waiting: registration.waiting,
@@ -29,9 +29,9 @@ function registerServiceWorker() {
         newWorker.addEventListener('statechange', () => {
           console.log({ state: newWorker.state })
           if (newWorker.state !== 'installed') return;
-          if (confirm('[statechanged] New version available. Want to upgrage?')) {
-            // registration.waiting.postMessage('SKIP_WAITING');
-          }
+          // if (confirm('[statechanged] New version available. Want to upgrage?')) {
+          // registration.waiting.postMessage('SKIP_WAITING');
+          // }
         });
       });
     }).catch((error) => {
