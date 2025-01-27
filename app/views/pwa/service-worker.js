@@ -26,7 +26,7 @@ async function cacheFirst(request) {
 self.addEventListener('activate', function(event) {
   console.log('service worker is being activated...', { event });
 
-  self.postMessage('Hello from service worker');
+  // self.postMessage('Hello from service worker');
 });
 
 self.addEventListener('install', function(event) {
@@ -41,7 +41,12 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  event.respondWith(cacheFirst(event.request))
+  if (url.pathname.includes('application')) {
+    return fetch(event.request);
+  }
+
+  return fetch(event.request);
+  // event.respondWith(cacheFirst(event.request))
 });
 
 self.addEventListener('activate', function(event) {

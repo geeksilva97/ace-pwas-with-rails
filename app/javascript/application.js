@@ -47,3 +47,18 @@ if ('serviceWorker' in navigator) {
   //   console.log({ event })
   // })
 }
+
+
+
+// Uncaught (in promise) NotAllowedError: Failed to execute 'prompt' on 'BeforeInstallPromptEvent': The prompt() method must be called with a user gesture
+// This happens because the prompt() method must be called with a user gesture
+
+// setTimeout(() => {
+//   console.log({ installPrompt })
+//   if (installPrompt) {
+//     installPrompt.prompt();
+//     installPrompt.userChoice.then((choiceResult) => {
+//       console.log({ choiceResult });
+//     });
+//   }
+// }, 500);
