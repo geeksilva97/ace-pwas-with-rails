@@ -2,11 +2,6 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 
-// navigator.setAppBadge(12).then(() => {
-//   console.log('Badge set!');
-// }).catch((error) => {
-//   console.error(error);
-// });
 function showConfirmationPrompt(sw) {
   const userChoice = Boolean(confirm('A new version of this site is available. Load it?'));
 
