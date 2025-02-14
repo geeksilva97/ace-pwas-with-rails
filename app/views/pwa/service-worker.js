@@ -28,7 +28,8 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  event.respondWith(cacheFirst(event.request))
+  return fetch(event.request);
+  // event.respondWith(cacheFirst(event.request))
 });
 
 self.addEventListener('message', (event) => {
@@ -41,11 +42,9 @@ self.addEventListener('message', (event) => {
 self.addEventListener('install', function(event) {
   console.log('Service worker install event', { state: event.currentTarget.serviceWorker.state })
 
-  // Activate the new service worker immediately
-  // self.skipWaiting();
-
   // simulate a long install so you can see the flow on DevTools
-  event.waitUntil(new Promise((resolve) => setTimeout(resolve, 1000)));
+  // event.waitUntil(new Promise((resolve, reject) => setTimeout(() => reject('just simulating an error'), 6000)));
+  event.waitUntil(new Promise((resolve, reject) => setTimeout(resolve, 6000)));
 });
 
 self.addEventListener('activate', function(event) {
