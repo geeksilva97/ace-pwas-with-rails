@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
+// TODO: turn this into banner_controller.js
 export default class extends Controller {
   connect() {
     this.updateStatus()
