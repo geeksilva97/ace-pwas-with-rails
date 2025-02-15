@@ -39,7 +39,7 @@ function handleUpgrade(registration) {
 function registerServiceWorker() {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
-      .then(handleUpgrade)
+      // .then(handleUpgrade)
       .catch((error) => {
         console.error('Service worker registration failed:', error);
       });

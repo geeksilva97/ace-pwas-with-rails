@@ -2,7 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 // TODO: turn this into banner_controller.js
 export default class extends Controller {
+  static targets = ['offline', 'upgrade'];
+
   connect() {
+    console.log(this.offlineTarget, this.upgradeTarget)
     this.updateStatus()
 
     window.addEventListener('online', this.updateStatus.bind(this))
@@ -14,7 +17,11 @@ export default class extends Controller {
     window.removeEventListener('offline', this.updateStatus.bind(this))
   }
 
+  serviceWorkerUpgrade() {
+    alert('gotta upgrade this thing');
+  }
+
   updateStatus() {
-    this.element.classList.toggle('hidden', navigator.onLine)
+    this.offlineTarget.classList.toggle('hidden', navigator.onLine)
   }
 }
