@@ -15,39 +15,24 @@ function showConfirmationPrompt(sw) {
 function handleUpgrade(registration) {
   if (!registration) return;
   let promptShown = false;
-  let shouldSendMessage = false;
+  let shouldSkipWaiting = false;
   const sw = registration.waiting;
 
   if (sw && sw?.state !== 'redundant') {
-    shouldSendMessage = showConfirmationPrompt(sw);
+    shouldSkipWaiting = showConfirmationPrompt(sw);
     promptShown = true;
   }
 
   registration.addEventListener('updatefound', () => {
     const newWorker = registration.installing;
 
-    if (promptShown && shouldSendMessage) {
-      console.log('user already decided to upgrade, no need to show the prompt')
-      newWorker.postMessage({ type: 'SKIP_WAITING' });
-      return;
+    if (!promptShown) {
+      return showConfirmationPrompt(newWorker);
     }
 
-    showConfirmationPrompt(newWorker);
-
-    // Actually there is not need to wait for the new worker to be installed
-    // even if the installation is not finished, the new worker will be activated
-
-    // newWorker.addEventListener('statechange', () => {
-    //   if (newWorker.state === 'installed') {
-    //     if (promptShown && shouldSendMessage) {
-    //       console.log('user already decided to upgrade, no need to show the prompt')
-    //       newWorker.postMessage({ type: 'SKIP_WAITING' });
-    //       return;
-    //     }
-
-    //     showConfirmationPrompt(newWorker);
-    //   }
-    // });
+    if (shouldSkipWaiting) {
+      newWorker.postMessage({ type: 'SKIP_WAITING' });
+    }
   });
 }
 
@@ -63,46 +48,4 @@ function registerServiceWorker() {
 
 if ('serviceWorker' in navigator) {
   registerServiceWorker();
-
-  // let promptShown = false;
-  // let userChoice = false;
-
-  // navigator.serviceWorker.getRegistration().then((registration) => {
-  //   if (!registration) return;
-  //   const sw = registration.waiting || registration.installing;
-  //   if (sw && sw?.state !== 'redundant') {
-  //     userChoice = askForUpgrade(sw);
-  //     promptShown = true;
-  //   }
-
-  //   registration.addEventListener('updatefound', () => {
-  //     const newWorker = registration.installing;
-
-  //     newWorker.addEventListener('statechange', () => {
-  //       if (newWorker.state === 'installed') {
-  //         if (promptShown) {
-  //           if (userChoice) {
-  //             console.log('user already decided to upgrade, no need to show the prompt')
-  //             newWorker.postMessage({ type: 'SKIP_WAITING' });
-  //           }
-  //           return;
-  //         }
-
-  //         askForUpgrade(newWorker);
-  //       }
-  //     });
-  //   });
-
-  //   // if (newSw && newSw?.state !== 'redundant') {
-  //   //   newSw.postMessage('GOTTA SKIP this')
-  //   //   console.log({ 
-  //   //     ['newS.state']: newSw.state,
-  //   //   })
-
-  //   //   queue.unshift(newSw);
-  //   //   // if (confirm('A new version of this site is available. Load it?')) {
-  //   //   //   console.log('gotta upgrade it!!')
-  //   //   // }
-  //   // }
-  // });
 }
