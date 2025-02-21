@@ -1,10 +1,8 @@
-
-const VERSION = 'v1'; // Version will be the key
+const VERSION = Date.now();
 
 async function cacheFirst(request) {
   const cache = await caches.open(VERSION);
   const cachedResponse = await cache.match(request);
-
   if (cachedResponse) {
     return cachedResponse;
   }
@@ -30,11 +28,29 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  event.respondWith(cacheFirst(event.request))
+  return fetch(event.request);
+  // event.respondWith(cacheFirst(event.request))
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data.type === 'SKIP_WAITING') {
+    console.log('I received a SKIP_WAITING message', { myCurrentState: self.serviceWorker.state })
+    self.skipWaiting();
+  }
+});
+
+self.addEventListener('install', function(event) {
+  console.log('Service worker install event', { state: event.currentTarget.serviceWorker.state })
+
+  // simulate a long install so you can see the flow on DevTools
+  // event.waitUntil(new Promise((resolve, reject) => setTimeout(() => reject('just simulating an error'), 6000)));
+  event.waitUntil(new Promise((resolve, reject) => setTimeout(resolve, 6000)));
 });
 
 self.addEventListener('activate', function(event) {
-  console.log('Activating service worker...')
+  console.log('Service worker activate event', { state: event.currentTarget.serviceWorker.state })
+
+  self.clients.claim(); // take control of all pages under this service worker's scope
 
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
@@ -47,6 +63,8 @@ self.addEventListener('activate', function(event) {
       );
     })
   );
+
+  event.waitUntil(new Promise((resolve) => setTimeout(resolve, 3000)));
 });
 
 // Add a service worker for processing Web Push notifications:

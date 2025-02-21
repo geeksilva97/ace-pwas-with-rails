@@ -24,8 +24,15 @@
   </head>
 
   <body>
-    <header class="bg-zinc-500 hidden" data-controller="offline">
-      <p class="text-white text-center py-2">You are offline - Content may be outdated</p>
+    <header data-controller="banner">
+      <div data-banner-target="offline" class="container bg-zinc-500 mx-auto px-5 py-2 flex justify-between items-center hidden">
+        <p class="text-white text-center py-2">You are offline - Content may be outdated</p>
+      </div>
+
+      <div data-banner-target="upgrade" class="container bg-indigo-500 mx-auto px-5 py-2 flex justify-between items-center hidden">
+        <p class="text-white text-center py-2">New version available!</p>
+        <button data-action="click->banner#serviceWorkerUpgrade" class="bg-indigo-600 text-white px-4 py-2 rounded">Upgrade</button>
+      </div>
     </header>
 
     <main class="container mx-auto mt-28 px-5 flex">
